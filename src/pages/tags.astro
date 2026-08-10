@@ -1,0 +1,51 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { getPostDate } from "../lib/posts";
+import "../styles/global.css";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => getPostDate(b).getTime() - getPostDate(a).getTime()
+);
+const tagMap = new Map<string, typeof posts>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagMap.set(tag, [...(tagMap.get(tag) ?? []), post]);
+  }
+}
+const tags = [...tagMap.entries()].sort(
+  ([left], [right]) => left.localeCompare(right, "zh-CN")
+);
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Tags / Andy Wu" description="Andy Wu's writing organized by tags.">
+  <div class="site-shell">
+    <SiteHeader current="tags" />
+    <main class="listing-page">
+      <div class="listing-intro">
+        <div>
+          <div class="page-kicker">Writing archive</div>
+          <h1>Tags</h1>
+        </div>
+        <p>{tags.length}个主题，按标签查看文章。</p>
+      </div>
+      <div class="tag-grid">
+        {tags.map(([tag, taggedPosts]) => (
+          <section class="tag-group">
+            <div class="tag-group__heading">
+              <h2>{tag}</h2>
+              <span>{taggedPosts.length}</span>
+            </div>
+            <div class="tag-group__items">
+              {taggedPosts.map((post) => (
+                <a href={`${base}posts/${post.id}/`}>{post.data.title}</a>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </main>
+  </div>
+</BaseLayout>

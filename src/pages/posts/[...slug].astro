@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import { formatPostDate, getPostDate } from "../../lib/posts";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const base = import.meta.env.BASE_URL;
+const postDate = getPostDate(post);
+---
+
+<BaseLayout title={`${post.data.title} / Andy Wu`} description={post.data.title}>
+  <div class="site-shell">
+    <SiteHeader current="timeline" />
+    <main class="post-page">
+      <a class="back-link" href={`${base}timeline/`}>← Timeline</a>
+      <header class="post-header">
+        <div class="page-kicker">{formatPostDate(postDate)}</div>
+        <h1>{post.data.title}</h1>
+        {post.data.tags.length > 0 && (
+          <div class="post-tags">
+            {post.data.tags.map((tag) => <span>{tag}</span>)}
+          </div>
+        )}
+      </header>
+      <article class="prose post-content">
+        <Content />
+      </article>
+    </main>
+  </div>
+</BaseLayout>
