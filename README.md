@@ -35,6 +35,7 @@
 - `src/content/posts/`：由原博客的 `_posts/*.md` 搬运而来。
 - `src/content.config.ts`：定义 Markdown 内容集合和 front matter 校验。
 - `src/lib/posts.ts`：处理文章日期排序，并兼容缺失日期的历史文章。
+- `src/data/build-info.json`：记录最近一次提交时写入的当前时间，用于页面左上角显示版本时间。
 
 ### 私有看板
 
@@ -137,6 +138,8 @@ npm run build
 ```
 
 本地构建只用于让 Agent 提前检查 Astro 的静态构建结果，尽早发现页面、类型或资源引用问题，不代表正式部署。正式部署仍由 GitHub Actions 在代码推送后执行。
+
+仓库使用 `.githooks/pre-commit` 在 `git commit` 时自动更新 `src/data/build-info.json`，让页面左上角的 `EXPLORER` 区域显示最近一次提交写入的时间。
 
 ## 刷新私有数据
 

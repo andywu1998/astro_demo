@@ -41,6 +41,12 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
   font: 500 0.75rem "DM Mono", monospace;
   letter-spacing: 0.08em;
 }
+.explorer-built-at {
+  padding: 0 16px 10px;
+  color: var(--vscode-muted);
+  font: 0.68rem "DM Mono", monospace;
+  letter-spacing: 0.04em;
+}
 .explorer-menu { color: var(--vscode-muted); letter-spacing: 0.18em; }
 .explorer-controls { display: flex; align-items: center; gap: 8px; }
 .sidebar-toggle {
@@ -59,6 +65,7 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
   justify-content: center;
   padding: 0;
 }
+.reader-page.is-sidebar-collapsed .explorer-built-at { display: none; }
 .reader-page.is-sidebar-collapsed .explorer-title > span:first-child,
 .reader-page.is-sidebar-collapsed .explorer-menu,
 .reader-page.is-sidebar-collapsed .reader-tabs,

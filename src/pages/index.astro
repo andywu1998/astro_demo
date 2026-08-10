@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getPostDate } from "../lib/posts";
 import "../styles/reader.css";
+import buildInfo from "../data/build-info.json";
 
 const posts = (await getCollection("posts")).sort(
   (a, b) => getPostDate(b).getTime() - getPostDate(a).getTime()
@@ -36,6 +37,7 @@ const readerEntries = posts.map((post) => {
 });
 
 const serializedEntries = JSON.stringify(readerEntries).replace(/</g, "\\u003c");
+const builtAt = buildInfo.builtAt || "";
 ---
 
 <BaseLayout title="Andy Wu / Reader" description="Andy Wu's Markdown blog reader.">
@@ -48,6 +50,7 @@ const serializedEntries = JSON.stringify(readerEntries).replace(/</g, "\\u003c")
           <span class="explorer-menu">•••</span>
         </div>
       </div>
+      <div class="explorer-built-at">built at {builtAt}</div>
       <div class="reader-tabs" role="tablist" aria-label="Blog navigation">
         <button class="reader-tab is-active" type="button" data-mode="search">SEARCH</button>
         <button class="reader-tab" type="button" data-mode="tags">TAGS</button>

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+timestamp="$(date '+%Y-%m-%d %H:%M:%S %z')"
+cat > src/data/build-info.json <<EOF
+{
+  "builtAt": "${timestamp}"
+}
+EOF
+
+git add src/data/build-info.json
