@@ -5,7 +5,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "sync:private": "bash scripts/sync-private-data.sh"
   },
   "dependencies": {
     "astro": "5.18.2"
