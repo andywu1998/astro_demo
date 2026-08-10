@@ -1,0 +1,107 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import "../styles/global.css";
+
+const experiments = [
+  {
+    number: "01",
+    type: "Field note",
+    title: "Build small, think in systems",
+    text: "A living index of experiments across product, language, markets, and the tools that connect them.",
+    tag: "Now exploring",
+  },
+  {
+    number: "02",
+    type: "Open source",
+    title: "Useful things in public",
+    text: "Tiny interfaces, working notes, and repeatable workflows built to be shared rather than shelved.",
+    tag: "Ship often",
+  },
+  {
+    number: "03",
+    type: "Working principle",
+    title: "Clarity is a feature",
+    text: "Make the next decision easier. Remove the noise. Leave a trail that another person can follow.",
+    tag: "Keep it legible",
+  },
+];
+
+const links = [
+  { label: "GitHub", href: "https://github.com/andywu1998" },
+  { label: "Blog", href: "https://andywu1998.github.io" },
+  { label: "Email", href: "mailto:hello@andywu1998.github.io" },
+];
+---
+
+<BaseLayout>
+  <main class="shell">
+    <nav class="nav">
+      <a class="brand" href={import.meta.env.BASE_URL}>
+        <span class="brand-mark">AW</span>
+        <span>Digital laboratory</span>
+      </a>
+      <div class="nav-meta">
+        <span class="status"><i></i> Online / 2026</span>
+        <a href="#notes">Index <span aria-hidden="true">↘</span></a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Independent builder · Shanghai / Remote</p>
+        <h1>Ideas become<br /><em>useful</em> when shipped.</h1>
+        <p class="intro">
+          I am Andy Wu. This is a compact corner for prototypes, field notes, and
+          practical systems that make complicated things feel lighter.
+        </p>
+        <a class="button" href="#notes">Explore the index <span>↓</span></a>
+      </div>
+      <div class="hero-art" aria-label="Abstract orbital diagram" role="img">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="orbit orbit-three"></div>
+        <div class="planet"></div>
+        <span class="art-label label-top">signal / 01</span>
+        <span class="art-label label-bottom">keep moving</span>
+      </div>
+    </section>
+
+    <section class="ticker" aria-label="Current focus">
+      <span>Current focus</span>
+      <div class="ticker-track">
+        <span>AI workflows</span><b>✳</b><span>Market structure</span><b>✳</b>
+        <span>Better writing</span><b>✳</b><span>Open notes</span><b>✳</b>
+      </div>
+    </section>
+
+    <section class="notes" id="notes">
+      <div class="section-heading">
+        <p class="eyebrow">Selected signals</p>
+        <p class="section-count">03 / 03</p>
+      </div>
+      <div class="card-grid">
+        {experiments.map((experiment) => (
+          <article class="note-card">
+            <div class="card-top">
+              <span>{experiment.number}</span>
+              <span>{experiment.type}</span>
+            </div>
+            <h2>{experiment.title}</h2>
+            <p>{experiment.text}</p>
+            <div class="card-bottom">
+              <span>{experiment.tag}</span>
+              <span class="arrow">↗</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Made with Astro. Built in public.</p>
+      <div class="footer-links">
+        {links.map((link) => <a href={link.href}>{link.label}</a>)}
+      </div>
+    </footer>
+  </main>
+</BaseLayout>
