@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import { formatPostDate, getPostDate } from "../lib/posts";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => getPostDate(b).getTime() - getPostDate(a).getTime()
+);
+const years = [...new Set(posts.map((post) => getPostDate(post).getFullYear()))];
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+---
+
+<main class="listing-page">
+  <div class="listing-intro">
+    <div>
+      <div class="page-kicker">Writing archive</div>
+      <h1>Timeline</h1>
+    </div>
+    <p>{posts.length}篇文章，按时间倒序排列。</p>
+  </div>
+  <div class="timeline">
+    {years.map((year) => (
+      <section class="timeline-year">
+        <h2>{year}</h2>
+        <div class="timeline-items">
+          {posts.filter((post) => getPostDate(post).getFullYear() === year).map((post) => (
+            <a class="timeline-item" href={`${base}posts/${post.id}/`}>
+              <time datetime={getPostDate(post).toISOString()}>{formatPostDate(getPostDate(post))}</time>
+              <span class="timeline-item__title">{post.data.title}</span>
+              <span class="timeline-item__arrow">↗</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</main>
