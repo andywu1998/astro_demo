@@ -19,11 +19,16 @@
   };
 
   function setSidebarCollapsed(collapsed) {
+    if (!page || !els.sidebarToggle) return;
     page.classList.toggle("is-sidebar-collapsed", collapsed);
     els.sidebarToggle.textContent = collapsed ? "›" : "‹";
     els.sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
     els.sidebarToggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
-    localStorage.setItem("reader-sidebar-collapsed", String(collapsed));
+    try {
+      localStorage.setItem("reader-sidebar-collapsed", String(collapsed));
+    } catch (_error) {
+      // Private browsing modes may deny localStorage; the current state still works.
+    }
   }
 
   function getEntry(id) {
@@ -150,7 +155,13 @@
   renderSearch();
   renderTags();
   renderTimeline();
-  setSidebarCollapsed(localStorage.getItem("reader-sidebar-collapsed") === "true");
+  let initiallyCollapsed = false;
+  try {
+    initiallyCollapsed = localStorage.getItem("reader-sidebar-collapsed") === "true";
+  } catch (_error) {
+    initiallyCollapsed = false;
+  }
+  setSidebarCollapsed(initiallyCollapsed);
   const hashId = decodeURIComponent(window.location.hash.slice(1));
   selectEntry(entries.some((entry) => entry.id === hashId) ? hashId : state.selectedId);
 })();

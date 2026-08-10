@@ -22,7 +22,7 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
   background: var(--vscode-bg);
   font-family: "Space Grotesk", "Noto Serif SC", sans-serif;
 }
-.reader-page.is-sidebar-collapsed { grid-template-columns: 34px minmax(0, 1fr); }
+.reader-page.is-sidebar-collapsed { grid-template-columns: 40px minmax(0, 1fr) !important; }
 .reader-sidebar {
   display: flex;
   min-width: 0;
@@ -55,6 +55,7 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
 }
 .sidebar-toggle:hover { color: #ffffff; }
 .reader-page.is-sidebar-collapsed .explorer-title {
+  display: flex;
   justify-content: center;
   padding: 0;
 }
@@ -62,6 +63,7 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
 .reader-page.is-sidebar-collapsed .explorer-menu,
 .reader-page.is-sidebar-collapsed .reader-tabs,
 .reader-page.is-sidebar-collapsed .reader-sidebar-body { display: none; }
+.reader-page.is-sidebar-collapsed .explorer-controls { display: block; }
 .reader-tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -185,7 +187,8 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
   scrollbar-color: #555 var(--vscode-bg);
 }
 .markdown-source {
-  min-width: max-content;
+  width: 100%;
+  min-width: 0;
   margin: 0;
   padding: 8px 0 70px;
   color: #d4d4d4;
@@ -193,18 +196,13 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
   font: 0.9rem/1.65 "DM Mono", "Noto Serif SC", monospace;
   tab-size: 2;
 }
-.source-line { display: grid; grid-template-columns: 58px max-content; min-height: 1.65em; }
+.source-line { display: grid; grid-template-columns: 58px minmax(0, 1fr); min-height: 1.65em; }
 .source-line:hover { background: rgba(255, 255, 255, 0.045); }
 .source-line__number { padding-right: 18px; color: #5a5a5a; text-align: right; user-select: none; }
-.source-line__content { white-space: pre; }
+.source-line__content { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .source-line:nth-child(-n+9) .source-line__content { color: var(--vscode-orange); }
 .source-line__content::first-line { color: inherit; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-@media (max-width: 1000px) {
-  .markdown-source { min-width: 0; width: 100%; }
-  .source-line { grid-template-columns: 58px minmax(0, 1fr); }
-  .source-line__content { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-}
 @media (max-width: 760px) {
   .reader-page { grid-template-columns: minmax(235px, 38vw) minmax(0, 1fr); }
   .explorer-title { padding: 0 10px; }
