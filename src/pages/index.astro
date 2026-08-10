@@ -1,13 +1,92 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SiteHeader from "../components/SiteHeader.astro";
-import TimelinePage from "../components/TimelinePage.astro";
-import "../styles/global.css";
+import { getPostDate } from "../lib/posts";
+import "../styles/reader.css";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => getPostDate(b).getTime() - getPostDate(a).getTime()
+);
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const readerEntries = posts.map((post) => {
+  const date = getPostDate(post);
+  const frontmatter = [
+    "---",
+    "layout: post",
+    `title: ${JSON.stringify(post.data.title)}`,
+    `date: ${date.toISOString().replace(".000Z", "")}`,
+    "tags:",
+    ...post.data.tags.map((tag) => `  - ${JSON.stringify(tag)}`),
+    "---",
+  ].join("\n");
+
+  return {
+    id: post.id,
+    title: post.data.title,
+    date: date.toISOString(),
+    dateLabel: `${date.getMonth() + 1}`.padStart(2, "0") + "-" + `${date.getDate()}`.padStart(2, "0"),
+    year: date.getFullYear(),
+    tags: post.data.tags,
+    source: `${frontmatter}\n\n${post.body ?? ""}`,
+    url: `${base}posts/${post.id}/`,
+  };
+});
+
+const serializedEntries = JSON.stringify(readerEntries).replace(/</g, "\\u003c");
 ---
 
-<BaseLayout title="Timeline / Andy Wu" description="Andy Wu's writing organized chronologically.">
-  <div class="site-shell">
-    <SiteHeader current="timeline" />
-    <TimelinePage />
-  </div>
+<BaseLayout title="Andy Wu / Reader" description="Andy Wu's Markdown blog reader.">
+  <main class="reader-page">
+    <aside class="reader-sidebar">
+      <div class="explorer-title">
+        <span>EXPLORER</span>
+        <span class="explorer-menu">•••</span>
+      </div>
+      <div class="reader-tabs" role="tablist" aria-label="Blog navigation">
+        <button class="reader-tab is-active" type="button" data-mode="search">SEARCH</button>
+        <button class="reader-tab" type="button" data-mode="tags">TAGS</button>
+        <button class="reader-tab" type="button" data-mode="timeline">TIMELINE</button>
+      </div>
+      <div class="reader-sidebar-body">
+        <section class="reader-panel is-active" data-panel="search">
+          <label class="search-box">
+            <span class="sr-only">Search title and content</span>
+            <input id="reader-search" type="search" placeholder="Search title, tag, content" autocomplete="off" />
+          </label>
+          <div class="result-count" id="result-count"></div>
+          <div class="file-list" id="search-results"></div>
+        </section>
+        <section class="reader-panel" data-panel="tags">
+          <div class="tree-list" id="tag-tree"></div>
+        </section>
+        <section class="reader-panel" data-panel="timeline">
+          <div class="tree-list" id="timeline-tree"></div>
+        </section>
+      </div>
+    </aside>
+
+    <section class="reader-editor">
+      <div class="editor-tabbar">
+        <div class="editor-tab is-open">
+          <span class="file-icon">◇</span>
+          <span class="editor-tab__title" id="editor-tab-title"></span>
+          <span class="editor-tab__close">×</span>
+        </div>
+      </div>
+      <div class="editor-path" id="editor-path"></div>
+      <div class="editor-actions">
+        <span class="editor-language">Markdown</span>
+        <a id="open-original" class="open-original" href="#" target="_self">OPEN ORIGINAL ↗</a>
+      </div>
+      <div class="editor-scroll" id="editor-scroll">
+        <pre class="markdown-source" id="markdown-source" aria-label="Markdown source"></pre>
+      </div>
+    </section>
+  </main>
+
+  <script is:inline type="application/json" id="reader-data" set:html={serializedEntries}></script>
+  <script is:inline src={`${base}assets/js/reader.js`} defer></script>
 </BaseLayout>
