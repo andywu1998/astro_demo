@@ -10,7 +10,7 @@
 
 当前这个站点主要承担两件事：
 
-1. 提供一个公开的 Astro 首页。
+1. 提供一个公开的 Astro 个人博客入口。
 2. 提供一个 `/private/` 私有页面，用于加载加密数据并在浏览器中使用口令解密展示。
 
 整个仓库仍然是纯静态部署，不包含后端服务。私有数据以加密 JSON 的形式公开存放，口令不会保存在这个仓库里。
@@ -22,6 +22,19 @@
 - 使用 Astro 负责路由、页面渲染和静态构建。
 - 使用 `.github/workflows/deploy.yml` 配置 GitHub Pages 自动部署。
 - 使用 `astro.config.mjs` 里的 `site` 和 `base` 配置，保证站点能正确部署在 `/astro_demo` 这个仓库路径下。
+
+公开博客目前包含三个主要栏目：
+
+- `/`：默认展示 About 页面。
+- `/timeline/`：按照时间倒序和年份分组展示博文。
+- `/tags/`：按照文章 tags 聚合展示博文。
+
+文章详情页位于 `/posts/<文章文件名>/`。公开内容只从 `andywu1998.github.io` 搬运 Markdown 文件，不搬运图片、脚本或其他博客资源：
+
+- `src/content/about.md`：由原博客的 `aboutme.md` 搬运而来。
+- `src/content/posts/`：由原博客的 `_posts/*.md` 搬运而来。
+- `src/content.config.ts`：定义 Markdown 内容集合和 front matter 校验。
+- `src/lib/posts.ts`：处理文章日期排序，并兼容缺失日期的历史文章。
 
 ### 私有看板
 
@@ -98,6 +111,17 @@
 - 只更新了 `public/assets/private/personal-assistant.encrypted.json`。
 
 结果：应用代码没有变化，但私有看板展示的数据内容被刷新了。
+
+### `f52837d` Rebuild public blog homepage
+
+这是公开站点重构提交。
+
+- 移除原先的演示型首页。
+- 新增 About、Timeline、Tags 和文章详情页。
+- 搬运 129 篇博文 Markdown 和 1 篇 About Markdown。
+- 保留私有个人助理看板及其 `/private/` 路由。
+
+结果：站点从 Astro 演示首页变成了以个人博客内容为核心的静态站点。
 
 ## 本地开发
 
