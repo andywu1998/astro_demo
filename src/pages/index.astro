@@ -7,6 +7,9 @@ import "../styles/global.css";
 const about = await getEntry("pages", "about");
 if (!about) throw new Error("About content not found");
 const { Content } = await render(about);
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <BaseLayout title="About / Andy Wu" description="Andy Wu's personal notes, writing, and background.">
@@ -20,7 +23,7 @@ const { Content } = await render(about);
       <aside class="page-aside">
         <p class="aside-label">A personal archive</p>
         <p>Writing, engineering notes, and the things worth keeping in view.</p>
-        <a class="aside-link" href={`${import.meta.env.BASE_URL}timeline/`}>Browse the timeline <span>→</span></a>
+        <a class="aside-link" href={`${base}timeline/`}>Browse the timeline <span>→</span></a>
       </aside>
     </main>
   </div>
