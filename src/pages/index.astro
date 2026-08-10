@@ -43,7 +43,10 @@ const serializedEntries = JSON.stringify(readerEntries).replace(/</g, "\\u003c")
     <aside class="reader-sidebar">
       <div class="explorer-title">
         <span>EXPLORER</span>
-        <span class="explorer-menu">•••</span>
+        <div class="explorer-controls">
+          <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true">‹</button>
+          <span class="explorer-menu">•••</span>
+        </div>
       </div>
       <div class="reader-tabs" role="tablist" aria-label="Blog navigation">
         <button class="reader-tab is-active" type="button" data-mode="search">SEARCH</button>

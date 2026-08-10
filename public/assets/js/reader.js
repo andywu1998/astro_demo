@@ -4,7 +4,9 @@
   const dataElement = document.getElementById("reader-data");
   const entries = JSON.parse(dataElement.textContent || "[]");
   const state = { selectedId: entries[0]?.id || "", mode: "search", query: "" };
+  const page = document.querySelector(".reader-page");
   const els = {
+    sidebarToggle: document.getElementById("sidebar-toggle"),
     search: document.getElementById("reader-search"),
     count: document.getElementById("result-count"),
     results: document.getElementById("search-results"),
@@ -15,6 +17,14 @@
     source: document.getElementById("markdown-source"),
     openOriginal: document.getElementById("open-original"),
   };
+
+  function setSidebarCollapsed(collapsed) {
+    page.classList.toggle("is-sidebar-collapsed", collapsed);
+    els.sidebarToggle.textContent = collapsed ? "›" : "‹";
+    els.sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+    els.sidebarToggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+    localStorage.setItem("reader-sidebar-collapsed", String(collapsed));
+  }
 
   function getEntry(id) {
     return entries.find((entry) => entry.id === id) || entries[0];
@@ -129,6 +139,9 @@
     state.query = els.search.value;
     renderSearch();
   });
+  els.sidebarToggle.addEventListener("click", () => {
+    setSidebarCollapsed(!page.classList.contains("is-sidebar-collapsed"));
+  });
   document.querySelector(".reader-sidebar-body").addEventListener("click", (event) => {
     const item = event.target.closest("[data-entry-id]");
     if (item) selectEntry(item.dataset.entryId);
@@ -137,6 +150,7 @@
   renderSearch();
   renderTags();
   renderTimeline();
+  setSidebarCollapsed(localStorage.getItem("reader-sidebar-collapsed") === "true");
   const hashId = decodeURIComponent(window.location.hash.slice(1));
   selectEntry(entries.some((entry) => entry.id === hashId) ? hashId : state.selectedId);
 })();
