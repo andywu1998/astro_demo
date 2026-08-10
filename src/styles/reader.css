@@ -13,6 +13,7 @@
 
 body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
 .reader-page {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(310px, 20vw) minmax(0, 1fr);
   width: 100vw;
@@ -22,7 +23,7 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
   background: var(--vscode-bg);
   font-family: "Space Grotesk", "Noto Serif SC", sans-serif;
 }
-.reader-page.is-sidebar-collapsed { grid-template-columns: 40px minmax(0, 1fr) !important; }
+.reader-page.is-sidebar-collapsed { grid-template-columns: 0 minmax(0, 1fr) !important; }
 .reader-sidebar {
   display: flex;
   min-width: 0;
@@ -36,7 +37,7 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
   align-items: center;
   justify-content: space-between;
   height: 42px;
-  padding: 0 16px;
+  padding: 0 16px 0 48px;
   color: #bbbbbb;
   font: 500 0.75rem "DM Mono", monospace;
   letter-spacing: 0.08em;
@@ -50,6 +51,10 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
 .explorer-menu { color: var(--vscode-muted); letter-spacing: 0.18em; }
 .explorer-controls { display: flex; align-items: center; gap: 8px; }
 .sidebar-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 20;
   width: 22px;
   height: 22px;
   padding: 0;
@@ -60,17 +65,12 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
   font: 1.35rem/1 "DM Mono", monospace;
 }
 .sidebar-toggle:hover { color: #ffffff; }
-.reader-page.is-sidebar-collapsed .explorer-title {
-  display: flex;
-  justify-content: center;
-  padding: 0;
+.reader-page.is-sidebar-collapsed .reader-sidebar {
+  width: 0;
+  border-right: 0;
+  visibility: hidden;
 }
 .reader-page.is-sidebar-collapsed .explorer-built-at { display: none; }
-.reader-page.is-sidebar-collapsed .explorer-title > span:first-child,
-.reader-page.is-sidebar-collapsed .explorer-menu,
-.reader-page.is-sidebar-collapsed .reader-tabs,
-.reader-page.is-sidebar-collapsed .reader-sidebar-body { display: none; }
-.reader-page.is-sidebar-collapsed .explorer-controls { display: block; }
 .reader-tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -189,11 +189,16 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
 .open-original:hover { color: #80bfff; text-decoration: underline; }
 .editor-scroll {
   min-height: 0;
+  min-width: 0;
+  max-width: 100%;
   flex: 1;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   scrollbar-color: #555 var(--vscode-bg);
 }
 .markdown-source {
+  display: block;
+  white-space: pre-wrap;
   width: 100%;
   min-width: 0;
   margin: 0;
@@ -212,11 +217,11 @@ body:has(.reader-page) { overflow: hidden; background: var(--vscode-bg); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (max-width: 760px) {
   .reader-page { grid-template-columns: minmax(235px, 38vw) minmax(0, 1fr); }
-  .explorer-title { padding: 0 10px; }
+  .explorer-title { padding: 0 10px 0 42px; }
   .reader-tab { font-size: 0.6rem; }
   .file-item { grid-template-columns: 14px minmax(0, 1fr); padding-right: 7px; padding-left: 8px; }
   .file-item__date { display: none; }
   .editor-path, .editor-actions { padding-right: 10px; padding-left: 10px; }
-  .source-line { grid-template-columns: 42px max-content; }
+  .source-line { grid-template-columns: 42px minmax(0, 1fr); }
   .source-line__number { padding-right: 10px; }
 }
