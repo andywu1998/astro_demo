@@ -1,0 +1,144 @@
+---
+title: "MDX 完整示例：Markdown 加上组件和 JavaScript"
+date: 2026-08-10
+tags:
+  - MDX
+  - Astro
+  - 教程
+categories:
+  - 技术
+---
+
+import MdxCallout from "../../components/MdxCallout.astro";
+
+export const mdxVersion = "MDX 1.0";
+
+export const topics = ["Frontmatter", "Markdown", "JSX", "JavaScript"];
+export const showDetails = true;
+
+# MDX 是什么？
+
+`.mdx` 可以理解为 **Markdown + JSX**：普通文字继续用 Markdown 写，需要动态内容时，可以直接使用 JavaScript 表达式或导入组件。
+
+<MdxCallout title="先记住这一句话">
+  <p>Markdown 负责可读性，组件负责交互和复用，MDX 把两者放进同一个文件。</p>
+</MdxCallout>
+
+## 1. 文件的基本结构
+
+一个 MDX 文件通常包含三部分：
+
+1. 文件顶部的 YAML frontmatter，用于标题、日期、标签等元数据。
+2. 中间的 Markdown 正文。
+3. Markdown 之间的 import、变量和组件表达式。
+
+本页的 frontmatter 会被博客的文章集合读取，并自动显示在文章标题下方。
+
+## 2. Markdown 语法仍然可用
+
+### 文本和链接
+
+这里有 **粗体**、*斜体*、~~删除线~~、`行内代码`，以及一个指向 [Astro 官网](https://astro.build/) 的链接。
+
+> 这是 Markdown 的引用块。它和 `.md` 文件中的写法完全一样。
+
+### 列表
+
+- 无序列表
+- 第二项
+  - 嵌套列表
+
+1. 有序列表
+2. 第二步
+
+### 表格
+
+| 能力 | 是否支持 | 说明 |
+| --- | --- | --- |
+| 标题与段落 | 是 | 继承 Markdown |
+| 代码块 | 是 | 支持语言标记 |
+| JavaScript | 是 | 可计算动态内容 |
+| Astro 组件 | 是 | 可复用 UI |
+
+### 任务列表
+
+- [x] 写 Markdown
+- [x] 插入组件
+- [ ] 接入真实数据
+
+### 代码块
+
+```ts
+type Post = {
+  title: string;
+  tags: string[];
+};
+
+const post: Post = {
+  title: "A useful idea",
+  tags: ["mdx", "astro"],
+};
+```
+
+## 3. JavaScript 表达式
+
+文件可以声明变量，并在正文中输出它们：
+
+当前示例版本是 **{mdxVersion}**。
+
+支持使用数组生成列表：
+
+<ul>
+  {topics.map((topic) => <li>{topic}</li>)}
+</ul>
+
+也可以使用条件渲染：
+
+{showDetails && (
+  <MdxCallout title="条件渲染也能工作" tone="cool">
+    <p>当 <code>showDetails</code> 为 <code>true</code> 时，这个组件才会出现在页面中。</p>
+  </MdxCallout>
+)}
+
+## 4. 导入并使用 Astro 组件
+
+上面的 `<MdxCallout />` 不是 Markdown 语法，而是从 `src/components/MdxCallout.astro` 导入的 Astro 组件。
+
+组件可以接收属性：
+
+<MdxCallout title="组件属性">
+  <p>这里通过 <code>title</code> 属性改变标题，通过 <code>tone="cool"</code> 改变视觉主题。</p>
+</MdxCallout>
+
+组件也可以接收插槽内容：
+
+<MdxCallout title="组件插槽">
+  <p>写在组件标签中间的内容，会通过 Astro 的 <code>&lt;slot /&gt;</code> 渲染出来。</p>
+</MdxCallout>
+
+## 5. 原生 HTML 和内联 SVG
+
+MDX 也允许直接写 HTML：
+
+<div class="mdx-stat-grid">
+  <div class="mdx-stat"><span class="mdx-stat__value">.md</span><span class="mdx-stat__label">纯 Markdown</span></div>
+  <div class="mdx-stat"><span class="mdx-stat__value">.mdx</span><span class="mdx-stat__label">Markdown + JSX</span></div>
+  <div class="mdx-stat"><span class="mdx-stat__value">{topics.length}</span><span class="mdx-stat__label">本页主题</span></div>
+</div>
+
+<p class="mdx-note">HTML 标签适合少量布局；复杂结构更适合提取成可复用组件。</p>
+
+## 6. 什么时候用 MDX？
+
+如果文章只是标题、段落、图片和代码，继续用 `.md` 更简单。
+
+如果文章需要以下能力，`.mdx` 会更合适：
+
+- 在正文中插入提示框、统计卡片或自定义组件。
+- 根据变量或条件决定页面内容。
+- 使用数组生成重复内容。
+- 把文章和交互式演示放在同一个文件里。
+
+## 总结
+
+MDX **不是另一种完全不同的 Markdown**，而是在 Markdown 上增加了组件和 JavaScript 能力。本项目现在同时支持 `.md` 和 `.mdx`，旧文章不需要修改，新文章可以按需要选择格式。

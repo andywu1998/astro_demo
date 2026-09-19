@@ -1,0 +1,8 @@
+---
+const { title = "提示", tone = "warm" } = Astro.props;
+---
+
+<aside class={`mdx-callout mdx-callout--${tone}`}>
+  <strong>{title}</strong>
+  <div><slot /></div>
+</aside>
